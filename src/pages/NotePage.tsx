@@ -5,6 +5,8 @@ import { useStructuredNote, useSaveNote, useDbNoteCount } from '@/hooks/useStruc
 import { useCurator } from '@/hooks/useCurator';
 import { useToast } from '@/hooks/useToast';
 import { useAnnotations } from '@/hooks/useAnnotations';
+import { useBookmarks } from '@/hooks/useBookmarks';
+import { BookmarkButton } from '@/components/notes/BookmarkButton';
 import { AnnotatedText } from '@/components/notes/AnnotatedText';
 import { NoteForm, type NoteFormData } from '@/components/notes/NoteForm';
 import { WorkSummary } from '@/components/works/WorkSummary';
@@ -20,6 +22,7 @@ export function NotePage() {
   const { data: note, isLoading, error } = useStructuredNote(id);
   const { userId, isCurator } = useCurator();
   const { byNote: annotationsByNote } = useAnnotations(userId);
+  const { isBookmarked, toggleBookmark } = useBookmarks(userId);
   const { mutateAsync: saveNote, isPending: isSaving } = useSaveNote();
   const { toast } = useToast();
   const [editing, setEditing] = useState(false);
@@ -135,12 +138,15 @@ export function NotePage() {
               Back to notes
             </Link>
           </Button>
-          {isOwner && (
-            <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
-              <Pencil className="h-4 w-4 mr-1.5" />
-              Edit
-            </Button>
-          )}
+          <div className="flex items-center gap-4">
+            <BookmarkButton bookmarked={isBookmarked(note.id)} onToggle={() => toggleBookmark(note.id)} withLabel />
+            {isOwner && (
+              <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
+                <Pencil className="h-4 w-4 mr-1.5" />
+                Edit
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 

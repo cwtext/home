@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useSeoMeta } from '@unhead/react';
 import { AccountMenu } from '@/components/auth/AccountMenu';
 import { NoteForm, type NoteFormData } from '@/components/notes/NoteForm';
@@ -11,7 +11,7 @@ import { TextPicker, type TextSelection } from '@/components/notes/TextPicker';
 import { ExportODTButton } from '@/components/notes/ExportODTButton';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Plus, PenLine, Search, Upload, BookOpen } from 'lucide-react';
+import { Plus, PenLine, Search, Upload, BookOpen, Bookmark } from 'lucide-react';
 import { useCurator } from '@/hooks/useCurator';
 import {
   useStructuredNotes,
@@ -22,6 +22,8 @@ import {
 } from '@/hooks/useStructuredNotes';
 import { useToast } from '@/hooks/useToast';
 import { useAnnotations } from '@/hooks/useAnnotations';
+import { useBookmarks } from '@/hooks/useBookmarks';
+import { bookmarkLink, paragraphAnchor } from '@/lib/bookmarks';
 import { useNoteWorks } from '@/hooks/useWorks';
 import { WorkSummary } from '@/components/works/WorkSummary';
 import { sourceLine, volumeLabel } from '@/lib/works';
@@ -33,6 +35,7 @@ const Index = () => {
   const signedIn = !!userId;
   // The reader's own margin notes
   const { byNote: annotationsByNote } = useAnnotations(userId);
+  const { bookmarks, isBookmarked, toggleBookmark } = useBookmarks(userId);
   const { toast } = useToast();
   const [showCuratedForm, setShowCuratedForm] = useState(false);
   const [showImport, setShowImport] = useState(false);
@@ -132,6 +135,21 @@ const Index = () => {
     return result;
   }, [notes, selection, search, matchCase, hasSearched, workOf, workById]);
 
+  // A link from a bookmark (#p-<slug>) scrolls to its paragraph and marks it for a moment
+  const { hash } = useLocation();
+  const shownCount = filteredNotes.length;
+  useEffect(() => {
+    if (!hash.startsWith('#p-') || shownCount === 0) return;
+    const slug = decodeURIComponent(hash.slice(3));
+    const el = document.getElementById(paragraphAnchor(slug));
+    if (!el) return;
+    el.scrollIntoView({ block: 'start' });
+    el.animate?.(
+      [{ backgroundColor: 'rgb(251 191 36 / 0.3)' }, { backgroundColor: 'transparent' }],
+      { duration: 2500, easing: 'ease-out' },
+    );
+  }, [hash, shownCount]);
+
   // The chosen volume and text, for the filter row and the export's header
   const filterLabels = [
     selectedVolume && { label: volumeLabel(selectedVolume), onRemove: () => setSelection({ volume: '', text: '' }) },
@@ -144,6 +162,17 @@ const Index = () => {
     const work = id ? workById.get(id) : undefined;
     return work ? sourceLine(work) : undefined;
   }, [workOf, workById]);
+
+  /** The most recent bookmark, offered as a quick way back */
+  const lastBookmark = useMemo(() => {
+    const slug = bookmarks[0]?.note_slug;
+    const note = slug ? notes?.find((n) => n.id === slug) : undefined;
+    // Wait for the works too, so the link can lead to the paragraph's place in its text
+    if (!note || works.length === 0) return undefined;
+    const id = workOf(note);
+    const work = id ? workById.get(id) : undefined;
+    return { note, work, to: bookmarkLink(note.id, work) };
+  }, [bookmarks, notes, works, workOf, workById]);
 
   /** A note's text name follows its work, so search and older copies still match */
   const withTags = useCallback((data: NoteFormData) => {
@@ -181,6 +210,10 @@ const Index = () => {
             <Button asChild variant="ghost" size="sm">
               <Link to="/works" aria-label="Works"><BookOpen className="h-4 w-4 sm:mr-2" /><span className="hidden sm:inline">Works</span></Link>
             </Button>
+            {/* On phones there's no room here; the last bookmark shows above the texts instead */}
+            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+              <Link to="/bookmarks" aria-label="Bookmarks"><Bookmark className="h-4 w-4 sm:mr-2" /><span className="hidden sm:inline">Bookmarks</span></Link>
+            </Button>
             <ExportODTButton notes={filteredNotes} title="cwtext_export" filterTags={filterLabels.map((f) => f.label)} />
             <AccountMenu />
           </div>
@@ -190,6 +223,18 @@ const Index = () => {
       <main className="container py-6">
         {/* Volume and text, then search — full width */}
         <div className="space-y-4">
+          {lastBookmark && (
+            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+              <Bookmark className="h-4 w-4 fill-current text-amber-600 dark:text-amber-400" />
+              <span className="text-muted-foreground">Last bookmark:</span>
+              <Link to={lastBookmark.to} className="font-medium hover:underline">
+                ¶ {lastBookmark.note.title}{lastBookmark.work && ` · ${lastBookmark.work.title}`}
+              </Link>
+              <Link to="/bookmarks" className="text-muted-foreground hover:text-foreground hover:underline">
+                All bookmarks ({bookmarks.length})
+              </Link>
+            </p>
+          )}
           <TextPicker
             volumes={volumes}
             works={works}
@@ -345,6 +390,8 @@ const Index = () => {
                     source={selectedWork ? undefined : sourceOf(note)}
                     annotations={annotationsByNote.get(note.id)}
                     canAnnotate={signedIn}
+                    bookmarked={isBookmarked(note.id)}
+                    onToggleBookmark={() => toggleBookmark(note.id)}
                   />
                 ))}
               </div>
