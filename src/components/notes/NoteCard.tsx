@@ -3,6 +3,9 @@ import type { StructuredNote } from '@/hooks/useStructuredNotes';
 import type { Annotation } from '@/lib/annotations';
 import { splitMatches } from '@/lib/highlight';
 import { AnnotatedText } from '@/components/notes/AnnotatedText';
+import { BookmarkButton } from '@/components/notes/BookmarkButton';
+import { paragraphAnchor } from '@/lib/bookmarks';
+import { cn } from '@/lib/utils';
 
 interface NoteCardProps {
   note: StructuredNote;
@@ -16,6 +19,10 @@ interface NoteCardProps {
   annotations?: Annotation[];
   /** Whether the reader may add margin notes (signed in) */
   canAnnotate?: boolean;
+  /** Whether the reader has bookmarked this paragraph */
+  bookmarked?: boolean;
+  /** Bookmarks the paragraph or removes its bookmark; no button without it */
+  onToggleBookmark?: () => void;
 }
 
 /** `text` with each occurrence of `query` marked */
@@ -35,7 +42,7 @@ function Highlighted({ text, query, matchCase }: { text: string; query: string; 
   );
 }
 
-function NoteCard({ note, highlight = '', matchCase, source, annotations, canAnnotate }: NoteCardProps) {
+function NoteCard({ note, highlight = '', matchCase, source, annotations, canAnnotate, bookmarked = false, onToggleBookmark }: NoteCardProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const to = `/note/${encodeURIComponent(note.id)}`;
@@ -48,14 +55,25 @@ function NoteCard({ note, highlight = '', matchCase, source, annotations, canAnn
 
   return (
     <article
+      id={paragraphAnchor(note.id)}
       onClick={open}
-      className="group flex gap-4 py-5 border-b border-border/40 last:border-b-0 hover:bg-muted/20 -mx-4 px-4 rounded-lg transition-colors cursor-pointer"
+      className="group flex scroll-mt-24 gap-4 py-5 border-b border-border/40 last:border-b-0 hover:bg-muted/20 -mx-4 px-4 rounded-lg transition-colors cursor-pointer"
     >
-      <h2 className="w-12 shrink-0 text-right text-sm font-bold text-muted-foreground tabular-nums leading-relaxed">
-        <Link to={to} state={{ from: location.search }} onClick={(e) => e.stopPropagation()} className="hover:text-foreground">
-          <Highlighted text={note.title} query={highlight} matchCase={matchCase} />
-        </Link>
-      </h2>
+      <div className="w-12 shrink-0 flex flex-col items-end gap-1.5">
+        <h2 className="text-right text-sm font-bold text-muted-foreground tabular-nums leading-relaxed">
+          <Link to={to} state={{ from: location.search }} onClick={(e) => e.stopPropagation()} className="hover:text-foreground">
+            <Highlighted text={note.title} query={highlight} matchCase={matchCase} />
+          </Link>
+        </h2>
+        {onToggleBookmark && (
+          // Shown on hover with a mouse; always shown on touch screens, and once bookmarked
+          <BookmarkButton
+            bookmarked={bookmarked}
+            onToggle={onToggleBookmark}
+            className={cn(!bookmarked && 'opacity-0 group-hover:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-60')}
+          />
+        )}
+      </div>
       <AnnotatedText
         noteSlug={note.id}
         text={note.content}
