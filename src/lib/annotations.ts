@@ -81,3 +81,34 @@ export function selectionIn(container: HTMLElement): NoteRange | null {
   if (start === end) return null;
   return { start, end, quote: text.slice(start, end) };
 }
+
+/** How far below the top of `container` the character at `index` of its text sits, in pixels */
+export function topAt(container: HTMLElement, index: number): number {
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+  let at = 0;
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const length = node.textContent?.length ?? 0;
+    if (index < at + length) {
+      const range = document.createRange();
+      range.setStart(node, index - at);
+      range.setEnd(node, Math.min(index - at + 1, length));
+      if (typeof range.getBoundingClientRect !== 'function') return 0; // jsdom
+      return range.getBoundingClientRect().top - container.getBoundingClientRect().top;
+    }
+    at += length;
+  }
+  return 0;
+}
+
+/**
+ * Where to put margin notes so each sits level with its words without
+ * overlapping the one above: the gap above each, in the order given
+ */
+export function marginGaps(items: { top: number; height: number }[], space = 12): number[] {
+  let bottom = 0;
+  return items.map(({ top, height }, i) => {
+    const gap = Math.max(i === 0 ? 0 : space, top - bottom);
+    bottom += gap + height;
+    return gap;
+  });
+}

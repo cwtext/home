@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { locate, segments } from './annotations';
+import { locate, marginGaps, segments } from './annotations';
 
 const text = 'The shadow is the dark side of the personality.';
 
@@ -30,5 +30,15 @@ describe('segments', () => {
 
   it('gives the plain text as one part when nothing is marked', () => {
     expect(segments('abc', '', false, [])).toEqual([{ text: 'abc', match: false, noted: false }]);
+  });
+});
+
+describe('marginGaps', () => {
+  it('puts each note level with its words', () => {
+    expect(marginGaps([{ top: 0, height: 40 }, { top: 100, height: 40 }])).toEqual([0, 60]);
+  });
+
+  it('pushes a note down when the one above runs into its place', () => {
+    expect(marginGaps([{ top: 20, height: 80 }, { top: 50, height: 40 }])).toEqual([20, 12]);
   });
 });
