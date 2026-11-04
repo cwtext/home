@@ -164,7 +164,7 @@ export function WorksPage() {
                       <tr className="border-b border-border/40 align-top">
                         <td className="py-2 pr-4">
                           <span className="font-medium">{work.title}</span>
-                          {work.kind !== 'essay' && <span className="ml-2 text-xs text-muted-foreground">{work.kind}</span>}
+                          {work.kind && <span className="ml-2 text-xs text-muted-foreground">{work.kind}</span>}
                           {work.original_title && <span className="block text-xs italic text-muted-foreground">{work.original_title}</span>}
                           {work.first_published_in && <span className="block text-xs text-muted-foreground">First in {work.first_published_in}</span>}
                           {work.revisions && <span className="block text-xs text-muted-foreground">{work.revisions}</span>}
