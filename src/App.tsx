@@ -34,7 +34,7 @@ const defaultConfig: AppConfig = {
 export function App() {
   return (
     <UnheadProvider head={head}>
-      <AppProvider storageKey="nostr:app-config" defaultConfig={defaultConfig}>
+      <AppProvider storageKey="cwtext:app-config" defaultConfig={defaultConfig}>
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
             <Toaster />

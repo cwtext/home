@@ -3,7 +3,7 @@
 
 create table public.notes (
   id uuid primary key default gen_random_uuid(),
-  -- The note's Nostr `d` identifier, kept so existing links keep working
+  -- The note's id in its /note/… link (originally its Nostr `d` identifier)
   slug text not null unique,
   -- The Para. label, e.g. 456n
   para text not null,
@@ -15,9 +15,7 @@ create table public.notes (
   tags text[] not null default '{}',
   published_at timestamptz,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  -- Id of the last copy published to Nostr, if any
-  nostr_event_id text
+  updated_at timestamptz not null default now()
 );
 
 create index notes_sort_order_idx on public.notes (sort_order);

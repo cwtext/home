@@ -23,7 +23,6 @@ export default defineConfig(() => ({
       '**/node_modules/**',
       '**/dist/**',
       '**/{vite,eslint}.config.*',
-      '.agents/**',
     ],
     onConsoleLog(log) {
       return !log.includes("React Router Future Flag Warning");
