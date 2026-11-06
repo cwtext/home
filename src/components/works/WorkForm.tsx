@@ -29,8 +29,6 @@ function toFields(work?: WorkRow): Fields {
     original_language: text(work?.original_language ?? 'German'),
     kind: text(work?.kind ?? 'essay'),
     volume: text(work?.volume),
-    part: text(work?.part),
-    section: text(work?.section),
     para_from: text(work?.para_from),
     para_to: text(work?.para_to),
     year_written: text(work?.year_written),
@@ -39,8 +37,6 @@ function toFields(work?: WorkRow): Fields {
     year_first_published_note: text(work?.year_first_published_note),
     first_published_in: text(work?.first_published_in),
     revisions: text(work?.revisions),
-    year_english: text(work?.year_english),
-    translator: text(work?.translator),
     notes: text(work?.notes),
     tag: text(work?.tag),
   };
@@ -69,8 +65,6 @@ export function WorkForm({ work, volumes, tags, onSubmit, onCancel, isSubmitting
       original_language: orNull(fields.original_language),
       kind: fields.kind.trim().toLowerCase() || 'essay',
       volume: orNull(fields.volume),
-      part: toInt(fields.part),
-      section: toInt(fields.section),
       para_from: toInt(fields.para_from),
       para_to: toInt(fields.para_to),
       year_written: toInt(fields.year_written),
@@ -79,8 +73,6 @@ export function WorkForm({ work, volumes, tags, onSubmit, onCancel, isSubmitting
       year_first_published_note: orNull(fields.year_first_published_note),
       first_published_in: orNull(fields.first_published_in),
       revisions: orNull(fields.revisions),
-      year_english: toInt(fields.year_english),
-      translator: orNull(fields.translator),
       notes: fields.notes.trim(),
       tag: orNull(fields.tag.replace(/\s+/g, ' ').toLowerCase()),
     });
@@ -125,14 +117,6 @@ export function WorkForm({ work, volumes, tags, onSubmit, onCancel, isSubmitting
           </select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="work-part">Part</Label>
-          <Input id="work-part" value={fields.part} onChange={set('part')} {...number} />
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="work-section">Section</Label>
-          <Input id="work-section" value={fields.section} onChange={set('section')} {...number} />
-        </div>
-        <div className="space-y-1.5">
           <Label htmlFor="work-para-from">First paragraph</Label>
           <Input id="work-para-from" value={fields.para_from} onChange={set('para_from')} {...number} />
         </div>
@@ -174,14 +158,6 @@ export function WorkForm({ work, volumes, tags, onSubmit, onCancel, isSubmitting
             onChange={set('revisions')}
             placeholder="e.g. 1952: revised as Symbole der Wandlung"
           />
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="work-year-english">Year translated into English</Label>
-          <Input id="work-year-english" value={fields.year_english} onChange={set('year_english')} {...number} />
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="work-translator">Translator</Label>
-          <Input id="work-translator" value={fields.translator} onChange={set('translator')} />
         </div>
         <div className="space-y-1.5 sm:col-span-2">
           <Label htmlFor="work-notes">Notes</Label>

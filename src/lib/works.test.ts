@@ -10,10 +10,10 @@ const volumes = [
 
 function work(title: string, fields: Partial<WorkRow>): WorkRow {
   return {
-    id: title, title, original_title: null, original_language: null, kind: 'essay', volume: null, part: null, section: null,
+    id: title, title, original_title: null, original_language: null, kind: 'essay', volume: null,
     para_from: null, para_to: null, year_written: null, year_written_note: null,
     year_first_published: null, year_first_published_note: null, first_published_in: null,
-    revisions: null, year_english: null, translator: null, notes: '', tag: null, ...fields,
+    revisions: null, notes: '', tag: null, ...fields,
   };
 }
 
@@ -30,16 +30,6 @@ const titles = (list: WorkRow[]) => list.map((w) => w.title);
 describe('sortWorks', () => {
   it('orders by volume, with 9.1 between 5 and 11, then by paragraph', () => {
     expect(titles(sortWorks(works, volumes, 'volume'))).toEqual(['Intro', 'Two Kinds', 'Kore', 'Undated', 'Job']);
-  });
-
-  it('orders by part and section within a volume, ahead of paragraphs', () => {
-    const list = [
-      work('2.1', { volume: '5', part: 2, section: 1 }),
-      work('1.2', { volume: '5', part: 1, section: 2, para_from: 4 }),
-      work('1.1', { volume: '5', part: 1, section: 1 }),
-      work('No part', { volume: '5', para_from: 1 }),
-    ];
-    expect(titles(sortWorks(list, volumes, 'volume'))).toEqual(['1.1', '1.2', '2.1', 'No part']);
   });
 
   it('orders by date written, falling back to first published, unknown last', () => {

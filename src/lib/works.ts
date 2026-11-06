@@ -12,16 +12,14 @@ function compareNullable(a: number | null, b: number | null): number {
 }
 
 /**
- * Sort works for the list. By volume follows the Collected Works: volume, then
- * part and section, then first paragraph. By date written falls back to first published when the
+ * Sort works for the list. By volume follows the Collected Works (volume, then
+ * first paragraph). By date written falls back to first published when the
  * writing date is unknown, since a text can't be written after it appeared.
  */
 export function sortWorks(works: WorkRow[], volumes: VolumeRow[], order: WorkOrder): WorkRow[] {
   const volumeOrder = new Map(volumes.map((v) => [v.number, Number(v.sort_order)]));
   const byVolume = (a: WorkRow, b: WorkRow) =>
     compareNullable(a.volume ? volumeOrder.get(a.volume) ?? null : null, b.volume ? volumeOrder.get(b.volume) ?? null : null)
-    || compareNullable(a.part, b.part)
-    || compareNullable(a.section, b.section)
     || compareNullable(a.para_from, b.para_from)
     || a.title.localeCompare(b.title);
 

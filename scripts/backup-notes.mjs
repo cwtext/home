@@ -40,8 +40,8 @@ async function save(file, json, label) {
 }
 
 const VOLUME_COLUMNS = 'number,sort_order,title,year_published,notes';
-const WORK_COLUMNS = 'id,title,original_title,original_language,kind,volume,part,section,para_from,para_to,year_written,'
-  + 'year_written_note,year_first_published,year_first_published_note,first_published_in,revisions,year_english,translator,notes,tag';
+const WORK_COLUMNS = 'id,title,original_title,original_language,kind,volume,para_from,para_to,year_written,'
+  + 'year_written_note,year_first_published,year_first_published_note,first_published_in,revisions,notes,tag';
 
 // The works tables come from supabase/works.sql; until it has been run there is nothing to save
 try {
