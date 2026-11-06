@@ -45,4 +45,4 @@ Signed-in readers can keep private notes beside the texts. Select some words in 
 
 ## Archived: private notes
 
-Earlier versions let logged-in users keep their own NIP-44 encrypted notes beside the texts. That feature has been archived for now. The last version that includes it is commit `d3da174`, which can be restored from git history.
+Earlier versions let logged-in users keep their own NIP-44 encrypted notes beside the texts. That feature has been archived for now. The last version that includes it is commit `d3da174` in the original jqw22/cwtext repository; it is not in this repository's history.
