@@ -15,9 +15,7 @@ create table public.notes (
   tags text[] not null default '{}',
   published_at timestamptz,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  -- Id of the last copy published to Nostr, if any
-  nostr_event_id text
+  updated_at timestamptz not null default now()
 );
 
 create index notes_sort_order_idx on public.notes (sort_order);
