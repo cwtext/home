@@ -168,6 +168,11 @@ export function WorksPage() {
                           {work.original_title && <span className="block text-xs italic text-muted-foreground">{work.original_title}</span>}
                           {work.first_published_in && <span className="block text-xs text-muted-foreground">First in {work.first_published_in}</span>}
                           {work.revisions && <span className="block text-xs text-muted-foreground">{work.revisions}</span>}
+                          {(work.year_english !== null || work.translator) && (
+                            <span className="block text-xs text-muted-foreground">
+                              {['English', work.year_english, work.translator && `tr. ${work.translator}`].filter(Boolean).join(' ')}
+                            </span>
+                          )}
                           {work.notes && <span className="block text-xs text-muted-foreground whitespace-pre-line">{work.notes}</span>}
                           {/* On a phone the dates and volume share the title's cell */}
                           <span className="block text-xs sm:hidden">

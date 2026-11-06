@@ -18,6 +18,9 @@ export interface WorkRow {
   original_language: string | null;
   kind: string;
   volume: string | null;
+  /** Part (chapter) and section within the volume, for book order before paragraphs are known */
+  part: number | null;
+  section: number | null;
   para_from: number | null;
   para_to: number | null;
   year_written: number | null;
@@ -26,13 +29,16 @@ export interface WorkRow {
   year_first_published_note: string | null;
   first_published_in: string | null;
   revisions: string | null;
+  /** Year of the first English translation, and who made it */
+  year_english: number | null;
+  translator: string | null;
   notes: string;
   /** The text (tag) its notes carry */
   tag: string | null;
 }
 
 // One literal, so supabase-js can check the selected columns
-const WORK_COLUMNS = 'id, title, original_title, original_language, kind, volume, para_from, para_to, year_written, year_written_note, year_first_published, year_first_published_note, first_published_in, revisions, notes, tag';
+const WORK_COLUMNS = 'id, title, original_title, original_language, kind, volume, part, section, para_from, para_to, year_written, year_written_note, year_first_published, year_first_published_note, first_published_in, revisions, year_english, translator, notes, tag';
 
 const VOLUME_COLUMNS = 'number, sort_order, title, year_published, notes';
 
