@@ -6,7 +6,6 @@ import { NotePage } from "./pages/NotePage";
 import { WorksPage } from "./pages/WorksPage";
 import { MyNotesPage } from "./pages/MyNotesPage";
 import { BookmarksPage } from "./pages/BookmarksPage";
-import { LegacyNoteRedirect } from "./pages/LegacyNoteRedirect";
 import NotFound from "./pages/NotFound";
 
 // Match the Vite `base` (/home/) so routes resolve the same in dev, preview and on GitHub Pages
@@ -22,8 +21,6 @@ export function AppRouter() {
         <Route path="/works" element={<WorksPage />} />
         <Route path="/my-notes" element={<MyNotesPage />} />
         <Route path="/bookmarks" element={<BookmarksPage />} />
-        {/* Old links by Nostr address (/naddr1…) */}
-        <Route path="/:nip19" element={<LegacyNoteRedirect />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

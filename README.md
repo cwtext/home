@@ -24,8 +24,6 @@ The Works page (`/works`) lists Jung's essays and books with when each was writt
 
 Every night the "Back up notes" GitHub Action saves all notes to `public/notes.json`, and the volumes and works to `public/works.json`, and redeploys if they changed. The site falls back to those files if the database can't be reached. It can also be run by hand from the Actions tab.
 
-Notes were originally published on Nostr. Old `/naddr1…` links redirect to the same note.
-
 ## Search
 
 Visitors who aren't signed in can only read, by choosing a volume and text. Signed-in readers also get keyword search and **Ask**, where Claude reads every paragraph and picks the ones that answer a question in plain words, saying why each fits. Ask runs in the `ask` Supabase Edge Function (`supabase/functions/ask/index.ts`), so the Claude API key never reaches the browser. Each reader can ask 20 questions a day, counted by `supabase/ask.sql`.

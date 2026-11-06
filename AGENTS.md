@@ -27,4 +27,3 @@
 - `npm test` runs the type check, ESLint, Vitest and a build. It must pass before merging; the deploy runs it too.
 - Tests live beside the code (`*.test.ts(x)`); `src/test/TestApp.tsx` wraps components with the app's providers.
 - Never use the `any` type.
-- Old Nostr links (`/naddr1…`) are redirected by `src/pages/LegacyNoteRedirect.tsx`, which is the only reason `nostr-tools` is still a dependency.

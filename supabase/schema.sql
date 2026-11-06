@@ -3,7 +3,7 @@
 
 create table public.notes (
   id uuid primary key default gen_random_uuid(),
-  -- The note's Nostr `d` identifier, kept so existing links keep working
+  -- The note's id in its /note/… link (originally its Nostr `d` identifier)
   slug text not null unique,
   -- The Para. label, e.g. 456n
   para text not null,
