@@ -12,6 +12,7 @@ import { NoteForm, type NoteFormData } from '@/components/notes/NoteForm';
 import { WorkSummary } from '@/components/works/WorkSummary';
 import { useWorks } from '@/hooks/useWorks';
 import { workOfNote } from '@/lib/works';
+import { paragraphAnchor } from '@/lib/bookmarks';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Clock, Pencil } from 'lucide-react';
@@ -38,6 +39,8 @@ export function NotePage() {
   // Back returns to the search results the note was opened from
   const location = useLocation();
   const backTo = `/${(location.state as { from?: string } | null)?.from ?? ''}`;
+  // ...and scrolls the list to this paragraph (see Index), e.g. after editing it
+  const backToNote = `${backTo}#${paragraphAnchor(id)}`;
 
   useSeoMeta({
     title: note ? `${note.title} — cwtext` : 'Loading... — cwtext',
@@ -103,7 +106,7 @@ export function NotePage() {
         <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container max-w-3xl mx-auto flex items-center h-16">
             <Button asChild variant="ghost" size="sm">
-              <Link to={backTo} className="flex items-center gap-2">
+              <Link to={backToNote} className="flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 Back to notes
               </Link>
@@ -133,7 +136,7 @@ export function NotePage() {
       <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container max-w-3xl lg:max-w-5xl mx-auto flex items-center justify-between h-16">
           <Button asChild variant="ghost" size="sm">
-            <Link to={backTo} className="flex items-center gap-2">
+            <Link to={backToNote} className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
               Back to notes
             </Link>
