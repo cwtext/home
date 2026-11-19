@@ -156,7 +156,7 @@ export function NoteForm({
               placeholder="Write your note content here..."
               rows={12}
               disabled={isSubmitting}
-              className="min-h-[200px]"
+              className="min-h-[200px] md:text-base"
             />
           </div>
 
