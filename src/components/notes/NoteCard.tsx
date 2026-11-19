@@ -60,7 +60,7 @@ function NoteCard({ note, highlight = '', matchCase, source, annotations, canAnn
       className="group flex scroll-mt-24 gap-4 py-5 border-b border-border/40 last:border-b-0 hover:bg-muted/20 -mx-4 px-4 rounded-lg transition-colors cursor-pointer"
     >
       <div className="w-12 shrink-0 flex flex-col items-end gap-1.5">
-        <h2 className="text-right text-sm font-bold text-muted-foreground tabular-nums leading-relaxed">
+        <h2 className="text-right text-sm font-bold text-muted-foreground tabular-nums leading-[1.625rem]">
           <Link to={to} state={{ from: location.search }} onClick={(e) => e.stopPropagation()} className="hover:text-foreground">
             <Highlighted text={note.title} query={highlight} matchCase={matchCase} />
           </Link>
@@ -82,7 +82,7 @@ function NoteCard({ note, highlight = '', matchCase, source, annotations, canAnn
         annotations={annotations}
         canAnnotate={canAnnotate}
         header={source && <p className="mb-1 text-xs font-medium text-muted-foreground">{source}</p>}
-        className="text-sm text-foreground/80 leading-relaxed"
+        className="text-base text-foreground/80 leading-relaxed"
       />
     </article>
   );
